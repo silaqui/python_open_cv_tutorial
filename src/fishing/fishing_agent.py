@@ -27,7 +27,7 @@ class FishingAgent:
             lure_loc_arr = np.array(lure_location)
 
             min_val, max_val, min_loc, max_loc = cv.minMaxLoc(lure_loc_arr)
-            print("Lure location: " + str(max_val[0]) + "|" + str(max_val[1]))
+            print("Lure location: " + str(max_loc[0]) + "|" + str(max_loc[1]))
 
             self.move_to_lure(max_loc)
 
@@ -36,12 +36,27 @@ class FishingAgent:
 
     def move_to_lure(self, max_loc):
         pyautogui.moveTo(max_loc[0], max_loc[1], 1, pyautogui.easeOutQuad)
+        self.watch_lure(max_loc)
 
-    def watch_lure(self):
-        pass
+    def watch_lure(self, max_loc):
+        watch_time = time.time()
+        while True:
+            pixel = self.main_agent.cur_imgHSV[max_loc[1], max_loc[0]]
+            print(pixel)
+
+            if pixel[0] >= 60:
+                print("Bite detected")
+                break
+
+            if time.time() - watch_time >= 3:
+                print("Fishing timeout.")
+                break
+
+        self.pull_line()
 
     def pull_line(self):
-        pass
+        print("Pulling line...")
+        pyautogui.click(button='right')
 
     def run(self):
         while True:

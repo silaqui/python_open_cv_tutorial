@@ -4,7 +4,9 @@ from threading import Thread
 import cv2 as cv
 import numpy as np
 from PIL import ImageGrab
+
 from fishing.fishing_agent import FishingAgent
+
 
 class MainAgent:
     def __init__(self) -> None:
@@ -19,7 +21,9 @@ class MainAgent:
 
 
 def update_screen(agent):
-    # t0 = time.time()
+    t0 = time.time()
+    fps_report_daley = 5
+    fps_report_time = time.time()
     while True:
         screenshot = ImageGrab.grab()
         screenshot = np.array(screenshot)
@@ -32,9 +36,12 @@ def update_screen(agent):
         # key = cv.waitKey(1)
         # if key == ord('q'):
         #     break
-        # ex_time = time.time() - t0
-        # print("FPS: " + str(1 / ex_time))
-        # t0 = time.time()
+        ex_time = time.time() - t0
+        if time.time() - fps_report_time > fps_report_daley:
+            print("FPS: " + str(1 / ex_time))
+            fps_report_time = time.time()
+        t0 = time.time()
+        time.sleep(0.005)
 
 
 def print_menu():
